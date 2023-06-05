@@ -11,6 +11,7 @@ variable "service" {
   type = object({
     name     = string
     location = string
+    image    = string
   })
 }
 
