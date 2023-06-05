@@ -7,6 +7,7 @@ terraform {
   }
 }
 
+variable "project_id" {}
 variable "service" {
   type = object({
     name     = string
@@ -16,6 +17,7 @@ variable "service" {
 }
 
 resource "google_cloud_run_v2_service" "default" {
+  project  = var.project_id
   name     = var.service.name
   location = var.service.location
   ingress  = "INGRESS_TRAFFIC_ALL"
@@ -27,8 +29,9 @@ resource "google_cloud_run_v2_service" "default" {
   }
 }
 
-resource "google_cloud_run_service_iam_binding" "default" {
-  service  = var.service.name
+resource "google_cloud_run_v2_service_iam_binding" "default" {
+  project  = var.project_id
+  name     = var.service.name
   location = var.service.location
   role     = "roles/run.invoker"
   members = [
