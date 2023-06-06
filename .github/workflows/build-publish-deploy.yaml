@@ -3,7 +3,6 @@ name: build-publish-deploy
 on: [push]
 
 env:
-  PROJECT_ID: ${{ secrets.PROJECT_ID }}
   IMAGE: panda-adventure
 
 jobs:
@@ -16,10 +15,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
       - uses: google-github-actions/setup-gcloud@v1
         with:
-          service_account_key: ${{ secrets.SA_KEY }}
-          project_id: ${{ secrets.PROJECT_ID }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - run: |-
           gcloud --quiet auth configure-docker
@@ -38,4 +41,4 @@ jobs:
 
       - name: Deploy
         run: |-
-          gcloud run deploy ${{ secrets.SERVICE_NAME }} --image "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+          gcloud run deploy ${{ secrets.SERVICE_NAME }} --image "gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:$GITHUB_SHA"
