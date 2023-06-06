@@ -27,6 +27,10 @@ resource "google_cloud_run_v2_service" "default" {
       image = var.service.image
     }
   }
+
+  lifecycle {
+    ignore_changes = [ template.containers.image ]
+  }
 }
 
 resource "google_cloud_run_v2_service_iam_binding" "default" {
