@@ -1,4 +1,4 @@
-module github.com/tekk-y/panda-adventure
+module github.com/t-kky/panda-adventure
 
 go 1.20
 
